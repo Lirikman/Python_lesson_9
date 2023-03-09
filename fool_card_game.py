@@ -22,8 +22,8 @@ class Fool:
             self.pc_card.append(random_card[1])
             self.pc_keys.append(random_card[0])
 
-        print('Ваши карты: ', str(self.my_keys))
-        print('Карты компьютера: ', str(self.pc_keys))
+#        print('Ваши карты: ', str(self.my_keys))
+#        print('Карты компьютера: ', str(self.pc_keys))
 
     def my_move(self):
         move_random_card = random.choice(self.my_card)
@@ -32,20 +32,24 @@ class Fool:
         my_move = self.my_keys[index_card]
 
         for i in self.pc_keys:
-            if self.pc_keys[i] > my_move:
+            if i > my_move:
+                index_card_pc = self.pc_keys.index(i)
                 self.pc_keys.remove(i)
-                self.pc_card.pop(i)
-                self.my_keys.remove(i)
-                self.my_card.pop(i)
+                self.pc_card.pop(index_card_pc)
+                index_card_my = self.my_keys.index(my_move)
+                self.my_keys.remove(my_move)
+                self.my_card.pop(index_card_my)
                 return "Карты отбиты!"
                 break
-            elif self.pc_keys[i] < my_move:
+            elif i < my_move:
                 continue
             else:
+                index_card_my = self.my_keys.index(my_move)
+                card_my_move = self.my_card[index_card_my]
                 self.pc_keys.append(my_move)
-                self.pc_card.append(self.my_card[i])
+                self.pc_card.append(card_my_move)
                 self.my_keys.remove(i)
-                self.my_card.pop(i)
+                self.my_card.pop(index_card_my)
                 return 'Карты приняты!'
 
     def pc_move(self):
@@ -55,23 +59,37 @@ class Fool:
         pc_move = self.pc_keys[index_card]
 
         for i in self.my_keys:
-            if self.my_keys[i] > pc_move:
+            if i > pc_move:
+                index_card_my = self.my_keys.index(i)
                 self.my_keys.remove(i)
-                self.my_card.pop(i)
+                self.my_card.pop(index_card_my)
+                index_card_pc = self.pc_keys.index(pc_move)
+                self.pc_keys.remove(pc_move)
+                self.pc_card.pop(index_card_pc)
                 return "Карты отбиты!"
                 break
-            elif self.my_keys[i] < pc_move:
-                i += 1
+            elif i < pc_move:
                 continue
             else:
+                index_card_pc = self.pc_keys.index(pc_move)
+                card_pc_move = self.pc_card[index_card_pc]
                 self.my_keys.append(pc_move)
-                self.my_card.append(self.my_card[i])
+                self.my_card.append(card_pc_move)
+                self.pc_keys.remove(i)
+                self.pc_card.pop(index_card_pc)
                 return 'Карты приняты!'
-
+    def mode_game(self):
+        if len(self.my_card) < len(self.pc_card):
+                return 'Вы выиграли!'
+        if len(self.my_card) > len(self.pc_card):
+                return 'Вы проиграли!'
+        if len(self.my_card) == len(self.pc_card):
+                return 'Ничья!'
 
 if __name__ == '__main__':
     fool_game = Fool()
     print(fool_game.my_card, fool_game.pc_card)
     print(fool_game.my_move())
     print(fool_game.pc_move())
+    print(fool_game.mode_game())
 
